@@ -1,0 +1,123 @@
+/* Reset CSS Start Here */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+  display: inline-block;
+}
+
+button {
+  outline: none;
+  cursor: pointer;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+}
+/* Reset CSS End Here */
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.todo {
+  width: 40rem;
+  background-color: #ddd;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.todo__heading {
+  font-size: 2rem;
+  color: crimson;
+  letter-spacing: 2px;
+  border-bottom: 2px solid crimson;
+  width: fit-content;
+  margin-bottom: 1rem;
+}
+
+.todo__input-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.todo__input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  outline: none;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.todo__button {
+  padding: 0.5rem 1rem;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: orange;
+}
+
+.todo__display {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-height: 30rem;
+  overflow-y: auto;
+}
+
+.todo__empty {
+  text-align: center;
+  color: #777;
+}
+
+.todo__item {
+  background-color: #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.4rem 0.5rem;
+}
+
+.todo__text {
+  font-size: 1rem;
+}
+
+.todo__complete {
+  color: crimson;
+  text-decoration: line-through;
+  text-decoration-color: #dc143c5a;
+}
+
+.todo__button-wrapper {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.btn {
+  padding: 0.3rem;
+}
