@@ -3,25 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple To-Do App</title>
+    <link
+      rel="shortcut icon"
+      href="https://icons.veryicon.com/png/o/business/vscode-program-item-icon/todo-2.png"
+      type="image/x-icon"
+    />
+    <title>Todo App</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="todo">
-      <h1 class="todo__heading">Todo App</h1>
+    <div class="container">
+      <h1 class="todo-heading">TODO</h1>
 
-      <form class="todo__input-container">
+      <form class="input-container form-element">
         <input
           type="text"
-          class="todo__input"
-          placeholder="Enter your todo text"
+          placeholder="What do you need to do?"
+          class="input-filed"
         />
-        <button class="todo__button" type="submit">Add Todo</button>
-      </form>
 
-      <div class="todo__display"></div>
+        <button type="submit" class="add-btn">ADD</button>
+      </form>
+      <div class="todos-container">
+        <div class="todos-wrapper">
+          <div class="todo-item" id="${allTodos[i].id}">
+            <i class="fa-solid fa-circle-check check-btn"></i>
+
+            <div class="todo-text">${allTodos[i].todoText}</div>
+
+            <div class="button-wrapper">
+              <i
+                class="fa-solid fa-pen-to-square edit-button edit-disabled"
+              ></i>
+              <i class="fa-solid fa-trash delete-button"></i>
+            </div>
+          </div>
+        </div>
+
+        <button class="clear-complete">
+          <i class="fa-solid fa-xmark"></i> Clear Completed
+        </button>
+      </div>
     </div>
 
-    <script src="./app.js"></script>
+    <!-- Link JavaScript -->
+    <script src="./script.js"></script>
   </body>
 </html>
