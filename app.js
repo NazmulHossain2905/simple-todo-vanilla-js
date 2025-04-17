@@ -1,90 +1,159 @@
-const data = JSON.parse(localStorage.getItem("data")) || [];
+const inputField = document.querySelector(".input-filed");
+const formElement = document.querySelector(".form-element");
+const addButton = document.querySelector(".add-btn");
+const todosWrapper = document.querySelector(".todos-wrapper");
+const clearCompletedButton = document.querySelector(".clear-complete");
 
-function saveData() {
-  localStorage.setItem("data", JSON.stringify(data));
+// Todo array
+let allTodos = JSON.parse(localStorage.getItem("todos")) || [];
+
+function saveTodos() {
+  localStorage.setItem("todos", JSON.stringify(allTodos));
 }
 
-function completeTodo(index) {
-  data.forEach((value, i) => {
-    if (i === index) {
-      value.isCompleted = !value.isCompleted;
-    }
+let todoId;
+
+formElement.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const inputValue = inputField.value;
+
+  //   if (inputValue === "") {
+  //     alert("Please enter your todo text.");
+
+  //     return;
+  //   }
+
+  const todoObj = {
+    id: todoId || Date.now(),
+    todoText: inputValue,
+    completed: false,
+  };
+
+  if (todoId) {
+    const updatedTodos = allTodos.map((todo, index) =>
+      todo.id === todoId ? todoObj : todo
+    );
+
+    allTodos = updatedTodos;
+    addButton.innerText = "Add";
+    todoId = undefined;
+  } else {
+    allTodos.unshift(todoObj);
+  }
+
+  renderTodos();
+
+  inputField.value = "";
+});
+
+function renderTodos() {
+  let todos = "";
+
+  for (let i = 0; i < allTodos.length; i++) {
+    todos += `<div class="todo-item" id="${allTodos[i].id}">
+            ${
+              allTodos[i].completed
+                ? '<i class="fa-solid fa-circle-check check-btn"></i>'
+                : '<i class="fa-regular fa-circle check-btn"></i>'
+            }
+
+            <div class="todo-text" style="${
+              allTodos[i].completed ? "text-decoration: line-through;" : ""
+            }">${allTodos[i].todoText}</div>
+
+            <div class="button-wrapper">
+              <i class="fa-solid fa-pen-to-square edit-button ${
+                allTodos[i].completed ? "edit-disabled" : ""
+              }"></i>
+              <i class="fa-solid fa-trash delete-button"></i>
+            </div>
+          </div> `;
+  }
+
+  if (!todos.trim().length) {
+    todosWrapper.innerHTML = `<p class="empty-todo">
+            <i class="fa-solid fa-box-open"></i>
+            You don't have any todos
+          </p>`;
+
+    clearCompletedButton.style.display = "none";
+  } else {
+    todosWrapper.innerHTML = todos;
+    clearCompletedButton.style.display = "flex";
+  }
+
+  actionButtons();
+  saveTodos();
+}
+
+function completeTodo(id) {
+  allTodos.forEach(function (todo) {
+    if (todo.id === +id) {
+      todo.completed = !todo.completed;
+    } else todo;
   });
 
-  displayTodo();
-  console.table(data);
+  renderTodos();
 }
 
-function deleteTodo(index) {
-  data.splice(index, 1);
+function deleteTodo(id) {
+  const todoIndex = allTodos.findIndex((todo) => todo.id === Number(id));
+  allTodos.splice(todoIndex, 1);
+  renderTodos();
+}
 
-  displayTodo();
+function editTodo(id) {
+  const findTodo = allTodos.find((todo, index) => todo.id === Number(id));
+
+  if (findTodo.completed) {
+    return;
+  }
+
+  inputField.value = findTodo.todoText;
+  inputField.focus();
+  inputField.select();
+  addButton.innerText = "Update";
+  todoId = findTodo.id;
 }
 
 function actionButtons() {
-  const completeButtons = document.querySelectorAll(".complete-btn");
-  completeButtons.forEach(function (btn, key, parent) {
-    btn.addEventListener("click", () => completeTodo(key));
-  });
+  const checkButtons = document.querySelectorAll(".check-btn");
 
-  const deleteButtons = document.querySelectorAll(".delete-btn");
-  deleteButtons.forEach(function (btn, key, parent) {
-    btn.addEventListener("click", () => deleteTodo(key));
-  });
-}
-
-function displayTodo() {
-  const display = document.querySelector(".todo__display");
-
-  const newData = data.map((todo) => {
-    const template = `
-        <div class="todo__item">
-          <p class="todo__text ${todo.isCompleted ? "todo__complete" : ""}">
-            ${todo.task}
-          </p>
-
-          <div class="todo__button-wrapper">
-            <button class="btn complete-btn">✔️</button>
-            <button class="btn delete-btn">❌</button>
-          </div>
-        </div>
-    `;
-
-    return template;
-  });
-
-  if (data.length) {
-    display.innerHTML = newData.join(" ");
-  } else {
-    display.innerHTML = ` <h2 class="todo__empty">Empty Task</h2>`;
+  for (let i = 0; i < checkButtons.length; i++) {
+    checkButtons[i].addEventListener("click", function (event) {
+      const parentElement = checkButtons[i].parentElement;
+      completeTodo(parentElement.id);
+    });
   }
-  actionButtons();
-  saveData();
+
+  const deleteButtons = document.querySelectorAll(".delete-button");
+  for (let i = 0; i < deleteButtons.length; i++) {
+    deleteButtons[i].addEventListener("click", function (event) {
+      const parentElement = deleteButtons[i].parentElement.parentElement;
+
+      deleteTodo(parentElement.id);
+    });
+  }
+
+  const editButtons = document.querySelectorAll(".edit-button");
+  for (let i = 0; i < editButtons.length; i++) {
+    editButtons[i].addEventListener("click", function (event) {
+      const parentElement = editButtons[i].parentElement.parentElement;
+
+      editTodo(parentElement.id);
+    });
+  }
 }
 
-function formSubmitHandler(e) {
-  e.preventDefault();
-  const inputValue = e.target[0].value;
+clearCompletedButton.addEventListener("click", function (e) {
+  const completedTodos = allTodos.filter(function (todo) {
+    return !todo.completed;
+  });
 
-  const createTodo = {
-    task: inputValue,
-    isCompleted: false,
-  };
+  allTodos = completedTodos;
 
-  if (inputValue.trim()) {
-    data.unshift(createTodo);
-  } else return;
+  renderTodos();
+});
 
-  e.target[0].value = "";
-
-  displayTodo();
-}
-
-function initialApp() {
-  displayTodo();
-  const form = document.querySelector(".todo__input-container");
-
-  form.addEventListener("submit", formSubmitHandler);
-}
-
-window.onload = initialApp;
+renderTodos();
