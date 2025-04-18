@@ -18,11 +18,12 @@ formElement.addEventListener("submit", function (event) {
 
   const inputValue = inputField.value;
 
-  //   if (inputValue === "") {
-  //     alert("Please enter your todo text.");
+  if (inputValue.trim() === "") {
+    alert("Please enter your todo text.");
 
-  //     return;
-  //   }
+    inputField.focus();
+    return;
+  }
 
   const todoObj = {
     id: todoId || Date.now(),
